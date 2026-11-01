@@ -1,0 +1,425 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\renewcommand{\ttdefault}{txtt}
+\usepackage[left=1.9cm,right=1.9cm,top=3.2cm,bottom=2.5cm,headheight=1.7cm,headsep=0.4cm,footskip=0.9cm]{geometry}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage[font={footnotesize,it},labelsep=colon,hypcap=false]{caption}
+\usepackage{fancyhdr}
+\usepackage{eso-pic}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+
+\linespread{1.1}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\definecolor{gris}{gray}{0.35}
+\setlength{\fboxsep}{0pt}
+\setlength{\fboxrule}{0.4pt}
+\captionsetup[figure]{name=Imagen}
+\titleformat*{\section}{\normalsize\bfseries}
+\titlespacing*{\section}{0pt}{14pt}{6pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\includegraphics[height=1.4cm]{logo_usm}}
+\fancyhead[R]{\footnotesize UNIVERSIDAD TÉCNICA FEDERICO SANTA MARÍA\\DEPARTAMENTO DE INDUSTRIAS\\CAMPUS SANTIAGO VITACURA\\SEGUNDO SEMESTRE 2026}
+\fancyfoot[R]{\footnotesize\thepage}
+
+\AddToShipoutPictureBG{\AtPageLowerLeft{\setlength{\unitlength}{1bp}\color[gray]{0.6}\put(24,24){\framebox(564,744){}}}}
+
+\definecolor{clave}{HTML}{1A8BCB}
+\definecolor{funcion}{HTML}{A8A898}
+\definecolor{texto}{HTML}{E08A14}
+\definecolor{alias}{HTML}{A0422E}
+\definecolor{codigo}{HTML}{212121}
+
+\makeatletter
+\newcommand{\numero}[1]{\ifnum\lst@mode=\lst@Pmode\textcolor{texto}{#1}\else#1\fi}
+\makeatother
+
+\lstset{
+  morestring=[b]',
+  moredelim=[s][\color{alias}]{`}{`},
+  keywords={SELECT,FROM,WHERE,AND,OR,NOT,IS,NULL,IN,BETWEEN,ORDER,BY,GROUP,HAVING,LIMIT,DESC,ASC,AS,JOIN,ON,DISTINCT,SET,UPDATE,DELETE,INSERT,INTO,VALUES,AVG},
+  keywords=[2]{COUNT,SUM,MIN,MAX},
+  basicstyle=\ttfamily\footnotesize\color{codigo},
+  keywordstyle=\bfseries\color{clave},
+  keywordstyle=[2]\color{funcion},
+  stringstyle=\color{texto},
+  frame=tb,
+  columns=fullflexible,
+  keepspaces=true,
+  upquote=true,
+  showstringspaces=false,
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1
+           {0}{{\numero{0}}}1 {1}{{\numero{1}}}1 {2}{{\numero{2}}}1 {3}{{\numero{3}}}1 {4}{{\numero{4}}}1 {5}{{\numero{5}}}1 {6}{{\numero{6}}}1 {7}{{\numero{7}}}1 {8}{{\numero{8}}}1 {9}{{\numero{9}}}1
+}
+
+\begin{document}
+
+\begin{center}
+\vspace*{4cm}
+{\fontsize{26}{32}\selectfont\bfseries\textsc{Laboratorio 4}\par}
+\vspace{10pt}
+{\color{lightgray}\rule{0.75\linewidth}{0.5pt}}\par
+\vspace{2pt}
+{\itshape Entregable SQL (1/2): base de datos Austral Editores\par}
+{\color{lightgray}\rule{0.75\linewidth}{0.5pt}}\par
+\vspace{12pt}
+{\fontsize{22}{28}\selectfont\bfseries\textsc{Sistemas de información para la gestión.}\par}
+\vspace{4.5cm}
+{\color{gris}\itshape Daniela Román Schuffenegger, rol 202160649-1, \href{mailto:daniela.roman@usm.cl}{\underline{daniela.roman@usm.cl}}\\
+Paralelo 101\par}
+\vspace{1.8cm}
+{\color{gris}\itshape Profesor: José Luis Sáez.\\
+Ayudantes: Valeria Bobadilla, Catalina Bodaleo, Luis Contreras, Benjamín Jara.\\
+Fecha: 31 de octubre de 2026\par}
+\end{center}
+\vspace{0.8cm}
+\textbf{Repositorio Github: \href{https://github.com/DanielaRoman7/ICN292-Lab4-Roman-Daniela}{https://github.com/DanielaRoman7/ICN292-Lab4-Roman-Daniela}}
+\newpage
+
+\section*{Consulta 1: autores que no son de Chile}
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}
+SELECT nombre AS `Nombre`, genero AS `Género`
+FROM autores
+WHERE pais <> 'Chile' OR pais IS NULL
+ORDER BY nombre;
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.25\linewidth]{capturas/consulta01}}
+\captionof{figure}{Autores que no son de Chile}
+\end{minipage}
+
+\bigskip
+
+Para Kenji Arakawa, \lstinline|pais <> 'Chile'| no da verdadero sino \lstinline|NULL|, porque su país está vacío y cualquier comparación con \lstinline|NULL| da \lstinline|NULL|; como el \lstinline|WHERE| solo deja pasar las filas verdaderas, Kenji quedaba fuera, y por eso agregué \lstinline|OR pais IS NULL|.
+
+\section*{Consulta 2: libros entre 190 y 220 páginas}
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}
+SELECT titulo AS `Título`, paginas AS `Páginas`
+FROM libros
+WHERE paginas BETWEEN 190 AND 220
+ORDER BY paginas;
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.25\linewidth]{capturas/consulta02}}
+\captionof{figure}{Libros entre 190 y 220 páginas}
+\end{minipage}
+
+\section*{Consulta 3: resumen del catálogo}
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}
+SELECT COUNT(*) AS `Total de libros`,
+       SUM(ejemplares_vendidos) AS `Total de ejemplares`,
+       AVG(paginas) AS `Promedio de páginas`,
+       MIN(anio) AS `Año más antiguo`,
+       MAX(ejemplares_vendidos) AS `Máximo por libro`
+FROM libros;
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.7\linewidth]{capturas/consulta03}}
+\captionof{figure}{Resumen del catálogo}
+\end{minipage}
+
+\section*{Consulta 4: géneros de los autores}
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}
+SELECT DISTINCT genero AS `Género`
+FROM autores
+ORDER BY genero;
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.1\linewidth]{capturas/consulta04}}
+\captionof{figure}{Géneros de los autores}
+\end{minipage}
+
+\section*{Consulta 5: autores con más de un libro en 2024}
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}
+SELECT a.nombre AS `Nombre`, COUNT(*) AS `Libros en 2024`
+FROM autores a
+JOIN libros l ON a.id_autor = l.id_autor
+WHERE l.anio = 2024
+GROUP BY a.id_autor, a.nombre
+HAVING COUNT(*) > 1
+ORDER BY a.nombre;
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.3\linewidth]{capturas/consulta05}}
+\captionof{figure}{Autores con más de un libro en 2024}
+\end{minipage}
+
+\section*{Consulta 6: los libros de 2024 más vendidos}
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}
+SELECT titulo AS `Título`, ejemplares_vendidos AS `Ejemplares vendidos`
+FROM libros
+WHERE anio = 2024 AND ejemplares_vendidos > 2000
+ORDER BY ejemplares_vendidos DESC
+LIMIT 3;
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.35\linewidth]{capturas/consulta06}}
+\captionof{figure}{Libros de 2024 con más de 2.000 ejemplares}
+\end{minipage}
+
+\section*{Consulta 7: agregar y borrar «Papel Mojado»}
+
+\begin{minipage}{\linewidth}
+\textbf{Agrego el libro}
+\begin{lstlisting}
+INSERT INTO libros (id_autor, titulo, paginas, ejemplares_vendidos, anio)
+VALUES (3, 'Papel Mojado', 260, 50, 2024);
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.85\linewidth]{capturas/consulta07a}}
+\captionof{figure}{INSERT de Papel Mojado}
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}{\linewidth}
+\textbf{Reviso que quedó guardado}
+\begin{lstlisting}
+SELECT id_libro AS `ID libro`,
+       id_autor AS `ID autor`,
+       id_coleccion AS `ID colección`,
+       titulo AS `Título`,
+       paginas AS `Páginas`,
+       ejemplares_vendidos AS `Ejemplares vendidos`,
+       anio AS `Año`
+FROM libros
+WHERE titulo = 'Papel Mojado';
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.75\linewidth]{capturas/consulta07b}}
+\captionof{figure}{Papel Mojado guardado en la tabla}
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}{\linewidth}
+\textbf{Lo borro filtrando por el título}
+\begin{lstlisting}
+DELETE FROM libros
+WHERE titulo = 'Papel Mojado';
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.85\linewidth]{capturas/consulta07c}}
+\captionof{figure}{DELETE de Papel Mojado}
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}{\linewidth}
+\textbf{Vuelvo a buscarlo para confirmar que ya no está}
+\begin{lstlisting}
+SELECT id_libro AS `ID libro`,
+       id_autor AS `ID autor`,
+       id_coleccion AS `ID colección`,
+       titulo AS `Título`,
+       paginas AS `Páginas`,
+       ejemplares_vendidos AS `Ejemplares vendidos`,
+       anio AS `Año`
+FROM libros
+WHERE titulo = 'Papel Mojado';
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.7\linewidth]{capturas/consulta07d}}
+\captionof{figure}{Papel Mojado ya no está en la tabla}
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}{\linewidth}
+\textbf{Cuento cuántos libros quedan con ese título}
+\begin{lstlisting}
+SELECT COUNT(*) AS `Libros encontrados`
+FROM libros
+WHERE titulo = 'Papel Mojado';
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.15\linewidth]{capturas/consulta07e}}
+\captionof{figure}{Conteo de libros llamados Papel Mojado}
+\end{minipage}
+
+\section*{Consulta 8: sumar 100 ejemplares a «Cielo de Enero»}
+
+\begin{minipage}{\linewidth}
+\textbf{Cómo estaba antes del cambio}
+\begin{lstlisting}
+SELECT titulo AS `Título`, ejemplares_vendidos AS `Ejemplares vendidos`
+FROM libros
+WHERE titulo = 'Cielo de Enero';
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.3\linewidth]{capturas/consulta08a}}
+\captionof{figure}{Cielo de Enero antes del UPDATE}
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}{\linewidth}
+\textbf{El UPDATE, que suma sobre el valor actual}
+\begin{lstlisting}
+UPDATE libros
+SET ejemplares_vendidos = ejemplares_vendidos + 100
+WHERE titulo = 'Cielo de Enero';
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.85\linewidth]{capturas/consulta08b}}
+\captionof{figure}{UPDATE de Cielo de Enero}
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}{\linewidth}
+\textbf{Cómo quedó después}
+\begin{lstlisting}
+SELECT titulo AS `Título`, ejemplares_vendidos AS `Ejemplares vendidos`
+FROM libros
+WHERE titulo = 'Cielo de Enero';
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.3\linewidth]{capturas/consulta08c}}
+\captionof{figure}{Cielo de Enero después del UPDATE}
+\end{minipage}
+
+\section*{Consulta 9: libros y sus colecciones}
+
+\begin{minipage}{\linewidth}
+\textbf{Cargo tres colecciones de prueba}
+\begin{lstlisting}
+INSERT INTO colecciones (titulo, fecha_publicacion) VALUES
+('Narrativa Austral', '2024-11-15'),
+('Ideas y Versos', '2024-08-20'),
+('Pequeños Lectores', '2025-03-10');
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.85\linewidth]{capturas/consulta09a}}
+\captionof{figure}{INSERT de las colecciones}
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}{\linewidth}
+\textbf{Asigno las novelas de Elena Pizarro y Nora Keller a la colección 1}
+\begin{lstlisting}
+UPDATE libros
+SET id_coleccion = 1
+WHERE id_autor IN (1, 5);
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.85\linewidth]{capturas/consulta09b}}
+\captionof{figure}{Libros asignados a la colección 1}
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}{\linewidth}
+\textbf{Asigno los libros de Harold Finch y Rodrigo Bahamonde a la colección 2}
+\begin{lstlisting}
+UPDATE libros
+SET id_coleccion = 2
+WHERE id_autor IN (2, 3);
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.85\linewidth]{capturas/consulta09c}}
+\captionof{figure}{Libros asignados a la colección 2}
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}{\linewidth}
+\textbf{Asigno los libros de Valentina Correa a la colección 3}
+\begin{lstlisting}
+UPDATE libros
+SET id_coleccion = 3
+WHERE id_autor = 4;
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.85\linewidth]{capturas/consulta09d}}
+\captionof{figure}{Libros asignados a la colección 3}
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}{\linewidth}
+\textbf{Listo cada libro con su colección y la fecha de publicación}
+\begin{lstlisting}
+SELECT l.titulo AS `Libro`,
+       c.titulo AS `Colección`,
+       c.fecha_publicacion AS `Fecha de publicación`
+FROM libros l
+JOIN colecciones c ON l.id_coleccion = c.id_coleccion
+ORDER BY c.fecha_publicacion, l.titulo;
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.5\linewidth]{capturas/consulta09e}}
+\captionof{figure}{Libros con su colección}
+\end{minipage}
+
+\section*{Consulta 10: pagos a los autores}
+
+\begin{minipage}{\linewidth}
+\textbf{Cargo cuatro pagos de prueba}
+\begin{lstlisting}
+INSERT INTO pagos (id_autor, fecha_pago, monto) VALUES
+(1, '2026-03-31', 450000.00),
+(4, '2026-03-31', 1250000.00),
+(1, '2026-06-30', 385500.00),
+(5, '2026-06-30', 980000.00);
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.85\linewidth]{capturas/consulta10a}}
+\captionof{figure}{INSERT de los pagos}
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}{\linewidth}
+\textbf{Primera sentencia: cada pago con su autor}
+\begin{lstlisting}
+SELECT a.nombre AS `Nombre`,
+       p.fecha_pago AS `Fecha de pago`,
+       p.monto AS `Monto`
+FROM pagos p
+JOIN autores a ON p.id_autor = a.id_autor
+ORDER BY p.fecha_pago, a.nombre;
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.4\linewidth]{capturas/consulta10b}}
+\captionof{figure}{Pagos con el nombre del autor}
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}{\linewidth}
+\textbf{Segunda sentencia: total pagado a cada autor}
+\begin{lstlisting}
+SELECT a.nombre AS `Nombre`, SUM(p.monto) AS `Total pagado`
+FROM autores a
+JOIN pagos p ON a.id_autor = p.id_autor
+GROUP BY a.id_autor, a.nombre
+ORDER BY a.nombre;
+\end{lstlisting}
+\centering
+\fcolorbox{gray}{white}{\includegraphics[width=0.25\linewidth]{capturas/consulta10c}}
+\captionof{figure}{Total pagado a cada autor}
+\end{minipage}
+
+\end{document}
